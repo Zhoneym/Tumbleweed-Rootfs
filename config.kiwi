@@ -1,0 +1,50 @@
+<image schemaversion="7.4" name="openSUSE-Tumbleweed-rootfs">
+	<description type="system">
+		<author>Tumbleweed</author>
+		<contact>rootfs@opensuse.org</contact>
+		<specification>openSUSE Tumbleweed rootfs</specification>
+	</description>
+	<preferences>
+		<type image="tbz"/>
+		<version>1.0.0</version>
+		<packagemanager>zypper</packagemanager>
+	</preferences>
+	<repository>
+		<source path="https://download.opensuse.org/tumbleweed/repo/oss/"/>
+	</repository>
+	<repository>
+		<source path="https://download.opensuse.org/tumbleweed/repo/non-oss/"/> 
+	</repository>
+	<packages type="bootstrap">
+		<package name="bash"/>
+		<package name="bzip2"/>
+		<package name="coreutils"/>
+		<package name="ca-certificates"/>
+		<package name="file"/>
+		<package name="filesystem"/>
+		<package name="findutils"/>
+		<package name="gawk"/>
+		<package name="glibc-locale"/>
+		<package name="gettext"/>
+		<package name="glibc"/>
+		<package name="grep"/>
+		<package name="gzip"/>
+		<package name="iproute2"/>
+		<package name="iputils"/>
+		<package name="zypper"/>
+		<package name="pciutils"/>
+		<package name="procps"/>
+		<package name="psmisc"/>
+		<package name="sed"/>
+		<package name="sudo"/>
+		<package name="shadow"/>
+		<package name="systemd"/>
+		<package name="systemd-sysvcompat"/>
+		<package name="tar"/>
+		<package name="util-linux"/>
+		<package name="xz"/>
+		<package name="openSUSE-build-key"/>
+		<package name="openSUSE-release"/>
+		<package name="openSUSE-repos-Tumbleweed"/>
+	</packages>
+</image>

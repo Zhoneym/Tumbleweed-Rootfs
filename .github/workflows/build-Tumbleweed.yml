@@ -1,0 +1,60 @@
+name: Build opensuse-Tumbleweed rootfs
+
+on:
+  schedule:
+    - cron: "0 */4 * * *"
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: opensuse/tumbleweed:latest
+      options: --privileged
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: install KiWi  
+      run: |
+        zypper -qn update
+        zypper -qn install python3-kiwi python3-xmltodict jing skopeo umoci util-linux coreutils
+    - name: Deployed 
+      run: |
+        kiwi-ng system build --description ./ --target-dir ./
+        mv openSUSE-Tumbleweed-rootfs.x86_64-1.0.0.tar.xz openSUSE-Tumbleweed-rootfs-x86_64.tar.xz
+        sha256sum openSUSE-Tumbleweed-rootfs-x86_64.tar.xz > openSUSE-Tumbleweed-rootfs-x86_64.tar.xz.sha256
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifacts
+        path: |
+            openSUSE-Tumbleweed-rootfs-x86_64.tar.xz
+            openSUSE-Tumbleweed-rootfs-x86_64.tar.xz.sha256
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Set TAG_NAME
+      run: | 
+        echo "TAG_NAME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+      with:
+        name: artifacts
+        path: release_images/
+    - name: Rename 
+      run: |
+        mv release_images/openSUSE-Tumbleweed-rootfs-x86_64.tar.xz release_images/openSUSE-Tumbleweed-rootfs-x86_64-${{ env.TAG_NAME }}.tar.xz
+        mv release_images/openSUSE-Tumbleweed-rootfs-x86_64.tar.xz.sha256 release_images/openSUSE-Tumbleweed-rootfs-x86_64-${{ env.TAG_NAME }}.tar.xz.sha256
+    - name: Release rootfs
+      uses: softprops/action-gh-release@v1
+      env:
+        TAG_NAME: ${{ env.TAG_NAME }}
+      with:
+        name: ${{ env.TAG_NAME }}
+        tag_name: ${{ env.TAG_NAME }}
+        body: |
+          This is an unofficial repacked opensuse-Tumbleweed rootfs that complies with OCI standards and is also suitable for Microsoft WSL2
+        files: |
+          release_images/*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fail_on_unmatched_files: true
