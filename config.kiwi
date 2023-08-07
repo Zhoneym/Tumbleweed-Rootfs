@@ -46,5 +46,6 @@
 		<package name="openSUSE-build-key"/>
 		<package name="openSUSE-release"/>
 		<package name="openSUSE-repos-Tumbleweed"/>
+		<package name="distribution-logos-openSUSE-Tumbleweed"/>
 	</packages>
 </image>
